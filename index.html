@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RadioGenie — Coming Soon</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #06010b;
+            --purple-dark: #120422;
+            --purple-mid: #560bad;
+            --neon-purple: #9d4edd;
+            --neon-magenta: #f72585;
+            --cyan-glow: #4cc9f0;
+            --text-main: #f3e8ff;
+            --text-muted: #b892ff;
+            --glass-bg: rgba(30, 10, 50, 0.35);
+            --glass-border: rgba(216, 180, 254, 0.18);
+            --glass-highlight: rgba(255, 255, 255, 0.08);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        /* Ambient Background Liquid Orbs */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.45;
+            animation: floatOrb 18s ease-in-out infinite alternate;
+        }
+
+        .orb-1 {
+            width: 45vw;
+            height: 45vw;
+            background: radial-gradient(circle, var(--neon-purple) 0%, rgba(86, 11, 173, 0) 70%);
+            top: -10%;
+            left: -10%;
+        }
+
+        .orb-2 {
+            width: 50vw;
+            height: 50vw;
+            background: radial-gradient(circle, var(--neon-magenta) 0%, rgba(114, 9, 183, 0) 70%);
+            bottom: -15%;
+            right: -10%;
+            animation-delay: -5s;
+            animation-duration: 22s;
+        }
+
+        .orb-3 {
+            width: 35vw;
+            height: 35vw;
+            background: radial-gradient(circle, var(--cyan-glow) 0%, rgba(76, 201, 240, 0) 70%);
+            top: 40%;
+            left: 30%;
+            opacity: 0.15;
+            animation-delay: -10s;
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -50px) scale(1.1); }
+            100% { transform: translate(-30px, 40px) scale(0.95); }
+        }
+
+        /* Scanlines and Glitch Overlay */
+        .scanlines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 99;
+            background: linear-gradient(
+                rgba(18, 4, 34, 0) 50%,
+                rgba(0, 0, 0, 0.25) 50%
+            );
+            background-size: 100% 4px;
+            opacity: 0.6;
+        }
+
+        /* Main Container - Liquid Glass Card */
+        .container {
+            position: relative;
+            width: 90%;
+            max-width: 700px;
+            padding: 4rem 3rem;
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow:
+                0 30px 60px rgba(0, 0, 0, 0.6),
+                inset 0 1px 0 var(--glass-highlight),
+                inset 0 -1px 0 rgba(157, 78, 221, 0.2),
+                0 0 50px rgba(157, 78, 221, 0.15);
+            text-align: center;
+            z-index: 2;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 30px;
+            background: linear-gradient(135deg, var(--neon-magenta), var(--neon-purple), var(--cyan-glow));
+            z-index: -1;
+            opacity: 0.3;
+            filter: blur(8px);
+        }
+
+        /* Typography & Glitch Effect */
+        .brand-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(3.5rem, 8vw, 6.5rem);
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            color: var(--text-main);
+            position: relative;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px rgba(157, 78, 221, 0.6);
+            animation: pulseGlow 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { text-shadow: 0 0 15px rgba(157, 78, 221, 0.4), 0 0 30px rgba(247, 37, 133, 0.2); }
+            100% { text-shadow: 0 0 25px rgba(157, 78, 221, 0.8), 0 0 50px rgba(247, 37, 133, 0.4); }
+        }
+
+        /* Glitch layers */
+        .brand-title::before,
+        .brand-title::after {
+            content: 'RadioGenie';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-deep);
+            clip: rect(0, 0, 0, 0);
+        }
+
+        .brand-title::before {
+            left: 2px;
+            text-shadow: -2px 0 var(--neon-magenta);
+            animation: glitchAnim 3s infinite linear alternate-reverse;
+        }
+
+        .brand-title::after {
+            left: -2px;
+            text-shadow: -2px 0 var(--cyan-glow), 0 2px var(--neon-purple);
+            animation: glitchAnim2 2.5s infinite linear alternate-reverse;
+        }
+
+        @keyframes glitchAnim {
+            0% { clip: rect(44px, 9999px, 56px, 0); transform: skew(0.3deg); }
+            10% { clip: rect(12px, 9999px, 89px, 0); transform: skew(0.8deg); }
+            20% { clip: rect(65px, 9999px, 11px, 0); transform: skew(-0.5deg); }
+            30% { clip: rect(33px, 9999px, 78px, 0); transform: skew(0.2deg); }
+            40% { clip: rect(91px, 9999px, 23px, 0); transform: skew(-0.7deg); }
+            50% { clip: rect(5px, 9999px, 45px, 0); transform: skew(0.4deg); }
+            60% { clip: rect(55px, 9999px, 92px, 0); transform: skew(-0.2deg); }
+            70% { clip: rect(18px, 9999px, 63px, 0); transform: skew(0.6deg); }
+            80% { clip: rect(82px, 9999px, 34px, 0); transform: skew(-0.3deg); }
+            90% { clip: rect(27px, 9999px, 71px, 0); transform: skew(0.5deg); }
+            100% { clip: rect(60px, 9999px, 15px, 0); transform: skew(0deg); }
+        }
+
+        @keyframes glitchAnim2 {
+            0% { clip: rect(15px, 9999px, 80px, 0); transform: skew(-0.4deg); }
+            15% { clip: rect(72px, 9999px, 30px, 0); transform: skew(0.5deg); }
+            30% { clip: rect(41px, 9999px, 99px, 0); transform: skew(-0.8deg); }
+            45% { clip: rect(8px, 9999px, 54px, 0); transform: skew(0.3deg); }
+            60% { clip: rect(59px, 9999px, 19px, 0); transform: skew(-0.5deg); }
+            75% { clip: rect(35px, 9999px, 85px, 0); transform: skew(0.7deg); }
+            90% { clip: rect(90px, 9999px, 42px, 0); transform: skew(-0.2deg); }
+            100% { clip: rect(20px, 9999px, 60px, 0); transform: skew(0deg); }
+        }
+
+        /* Subtitle with animated dots */
+        .subtitle-wrapper {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: var(--text-muted);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 2.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .subtitle-text {
+            position: relative;
+        }
+
+        .subtitle-text::after {
+            content: '';
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-magenta), transparent);
+            opacity: 0.7;
+        }
+
+        /* Audio Frequency Visualizer Bars */
+        .audio-waves {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            height: 40px;
+        }
+
+        .wave-bar {
+            width: 4px;
+            background: linear-gradient(to top, var(--neon-purple), var(--neon-magenta));
+            border-radius: 4px;
+            animation: soundWave 1.2s ease-in-out infinite alternate;
+        }
+
+        .wave-bar:nth-child(1) { height: 15px; animation-delay: 0.1s; }
+        .wave-bar:nth-child(2) { height: 30px; animation-delay: 0.3s; }
+        .wave-bar:nth-child(3) { height: 20px; animation-delay: 0.5s; }
+        .wave-bar:nth-child(4) { height: 38px; animation-delay: 0.2s; }
+        .wave-bar:nth-child(5) { height: 25px; animation-delay: 0.6s; }
+        .wave-bar:nth-child(6) { height: 32px; animation-delay: 0.4s; }
+        .wave-bar:nth-child(7) { height: 18px; animation-delay: 0.2s; }
+
+        @keyframes soundWave {
+            0% { transform: scaleY(0.4); opacity: 0.4; }
+            100% { transform: scaleY(1.2); opacity: 1; filter: drop-shadow(0 0 8px var(--neon-magenta)); }
+        }
+
+        /* Footer info */
+        .footer-info {
+            position: absolute;
+            bottom: 2rem;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            color: rgba(184, 146, 255, 0.4);
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            z-index: 2;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                width: 92%;
+                padding: 3rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-bg">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+
+    <div class="scanlines"></div>
+
+    <div class="container" id="glassCard">
+        <h1 class="brand-title">RadioGenie</h1>
+
+        <div class="subtitle-wrapper">
+            <span id="subtitleStatic">coming soon</span><span id="subtitleDots"></span>
+        </div>
+
+        <div class="audio-waves">
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+            <div class="wave-bar"></div>
+        </div>
+    </div>
+
+    <div class="footer-info">
+        [ SYS.VER 2.0.4 — GEN_AI STREAMING ]
+    </div>
+
+    <script>
+        // Animated dots sequence: coming soon -> coming soon. -> coming soon.. -> coming soon...
+        const dotsElement = document.getElementById('subtitleDots');
+        let dotCount = 0;
+
+        function updateDots() {
+            dotCount = (dotCount + 1) % 4; // 0, 1, 2, 3
+            dotsElement.textContent = '.'.repeat(dotCount);
+        }
+
+        setInterval(updateDots, 500);
+
+        // Subtle 3D tilt interaction for the liquid glass card
+        const card = document.getElementById('glassCard');
+
+        document.addEventListener('mousemove', (e) => {
+            const xAxis = (window.innerWidth / 2 - e.pageX) / 35;
+            const yAxis = (window.innerHeight / 2 - e.pageY) / 35;
+            card.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+        });
+
+        document.addEventListener('mouseleave', () => {
+            card.style.transform = `rotateY(0deg) rotateX(0deg)`;
+            card.style.transition = 'transform 0.5s ease';
+        });
+
+        document.addEventListener('mouseenter', () => {
+            card.style.transition = 'none';
+        });
+    </script>
+</body>
+</html>
